@@ -1,0 +1,12 @@
+﻿namespace Rent.DAL.DTO;
+
+public class PriceToCreateDto
+{
+    public DateTime StartDate { get; set; }
+
+    public decimal Value { get; set; }
+
+    public DateTime? EndDate { get; set; }
+
+    public int RoomTypeId { get; set; }
+}
