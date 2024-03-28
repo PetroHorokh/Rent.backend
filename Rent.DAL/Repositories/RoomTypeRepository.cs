@@ -11,6 +11,6 @@ public class RoomTypeRepository(RentContext context) : RepositoryBase<RoomType>(
 {
     public async Task CreateWithProcedure(RoomTypeToCreateDto roomType)
     {
-        await context.Database.ExecuteSqlAsync($"EXEC [dbo].[sp_RoomType_Insert] @Name = '{roomType.Name}'");
+        await context.Database.ExecuteSqlAsync($"EXEC [dbo].[sp_RoomType_Insert] @Name = '{roomType.Name}', @CreatedBy = '{roomType.CreatedBy}'");
     }
 }

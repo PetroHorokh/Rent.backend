@@ -17,15 +17,15 @@ public partial class Tenant
 
     public string Description { get; set; } = null!;
 
-    public string CreatedBy { get; set; } = null!;
+    public Guid CreatedBy { get; set; }
 
     public DateTime CreatedDateTime { get; set; }
 
-    public string ModifiedBy { get; set; } = null!;
+    public Guid ModifiedBy { get; set; }
 
     public DateTime ModifiedDateTime { get; set; }
 
-    public virtual Address Address { get; set; } = null!;
+    public virtual Address? Address { get; set; } = null!;
 
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
 

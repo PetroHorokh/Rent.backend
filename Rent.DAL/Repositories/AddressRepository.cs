@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Rent.DAL.DTO;
+using Rent.DAL.Models;
 using Rent.DAL.Repositories.Contracts;
 using Rent.DAL.RepositoryBase;
 
@@ -9,6 +10,6 @@ public class AddressRepository(RentContext context) : RepositoryBase<Address>(co
 {
     public async Task CreateWithProcedure(AddressToCreateDto address)
     {
-        await context.Database.ExecuteSqlAsync($"EXEC [dbo].[sp_Address_Insert] @City = '{address.City}', @Street = '{address.Street}', @Building = '{address.Building}'");
+        await Context.Database.ExecuteSqlAsync($"EXEC [dbo].[sp_Address_Insert] @City = '{address.City}', @Street = '{address.Street}', @Building = '{address.Building}', @CreatedBy = '{address.CreatedBy}'");
     }
 }

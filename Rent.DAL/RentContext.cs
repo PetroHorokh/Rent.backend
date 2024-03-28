@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Rent.DAL.Models;
+using temp;
 
 namespace Rent.DAL;
 
@@ -34,7 +35,7 @@ public partial class RentContext : DbContext
 
     public virtual DbSet<Price> Prices { get; set; }
 
-    public virtual DbSet<Rent> Rents { get; set; }
+    public virtual DbSet<Models.Rent> Rents { get; set; }
 
     public virtual DbSet<Room> Rooms { get; set; }
 
@@ -42,8 +43,11 @@ public partial class RentContext : DbContext
 
     public virtual DbSet<Tenant> Tenants { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source=DCNOTE142;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Initial Catalog=Rent;Application Intent=ReadWrite;Multi Subnet Failover=False");
+    public virtual DbSet<VwCertificateForTenant> VwCertificateForTenants { get; set; }
+
+    public virtual DbSet<VwRoomsWithTenant> VwRoomsWithTenants { get; set; }
+
+    public virtual DbSet<VwTenantAssetPayment> VwTenantAssetPayments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -265,7 +269,7 @@ public partial class RentContext : DbContext
                 .HasConstraintName("FK_Price_RoomTypeId_RoomType_RoomTypeId");
         });
 
-        modelBuilder.Entity<Rent>(entity =>
+        modelBuilder.Entity<Models.Rent>(entity =>
         {
             entity.ToTable("Rent");
 
@@ -349,6 +353,35 @@ public partial class RentContext : DbContext
                 .HasForeignKey(d => d.AddressId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Tenant_AddressId_Address_AddressId");
+        });
+
+        modelBuilder.Entity<VwCertificateForTenant>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vw_Certificate_For_Tenant");
+
+            entity.Property(e => e.RentEndDate).HasColumnName("Rent End Date");
+            entity.Property(e => e.RentStartDate).HasColumnName("Rent Start Date");
+        });
+
+        modelBuilder.Entity<VwRoomsWithTenant>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vw_Rooms_With_Tenants");
+
+            entity.Property(e => e.Name).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<VwTenantAssetPayment>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vw_Tenant_Asset_Payment");
+
+            entity.Property(e => e.Name).HasMaxLength(50);
+            entity.Property(e => e.Price).HasColumnType("numeric(38, 6)");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -5,4 +5,6 @@ public class AssetToCreateDto
     public Guid OwnerId { get; set; }
 
     public Guid RoomId { get; set; }
+
+    public Guid CreatedBy { get; set; }
 }

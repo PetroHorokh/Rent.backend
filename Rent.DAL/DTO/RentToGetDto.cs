@@ -1,12 +1,10 @@
 ﻿namespace Rent.DAL.DTO;
 
-public class RoomToCreateDto
+public class RentToGetDto
 {
     public int Number { get; set; }
 
-    public decimal Area { get; set; }
-
-    public int RoomTypeId { get; set; }
+    public string RoomType { get; set; }
 
     public Guid CreatedBy { get; set; }
 }
