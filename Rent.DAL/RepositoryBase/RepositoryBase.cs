@@ -34,6 +34,20 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
             .ToListAsync();
     }
 
+    public async Task<T?> GetSingleByConditionAsync(
+        Expression<Func<T, bool>> expression,
+        params Expression<Func<T, object>>[] includes)
+    {
+        var query = Context
+            .Set<T>()
+            .Where(expression)
+            .AsQueryable();
+
+        return await includes
+            .Aggregate(query, (current, next) => current.Include(next))
+            .FirstOrDefaultAsync();
+    }
+
     //public void Create(T entity) => Context.Set<T>().Add(entity);
     public void Update(T entity) => Context.Set<T>().Update(entity);
     public void Delete(T entity) => Context.Set<T>().Remove(entity);

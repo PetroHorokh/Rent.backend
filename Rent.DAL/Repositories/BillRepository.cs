@@ -10,6 +10,6 @@ public class BillRepository(RentContext context) : RepositoryBase<Bill>(context)
 {
     public async Task CreateWithProcedure(BillToCreateDto bill)
     {
-        await context.Database.ExecuteSqlAsync($"EXEC [dbo].[sp_Bill_Insert] @TenantId = '{bill.TenantId}', @AssetId = '{bill.AssetId}', @Amount = {bill.BillAmount}, @EndDate = '{bill.EndDate}', @IssueDate = '{bill.IssueDate}'");
+        await Context.Database.ExecuteSqlAsync($"EXEC [dbo].[sp_Bill_Insert] @TenantId = '{bill.TenantId}', @AssetId = '{bill.AssetId}', @Amount = {bill.BillAmount}, @EndDate = '{bill.EndDate}', @IssueDate = '{bill.IssueDate}', @CreatedBy = '{bill.CreatedBy}'");
     }
 }

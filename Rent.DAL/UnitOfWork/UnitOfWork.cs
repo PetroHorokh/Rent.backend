@@ -19,7 +19,8 @@ public class UnitOfWork(
     Lazy<IRentRepository> rentRepository,
     Lazy<IRoomRepository> roomRepository,
     Lazy<IRoomTypeRepository> roomTypeRepository,
-    Lazy<ITenantRepository> tenantRepository) : IUnitOfWork
+    Lazy<ITenantRepository> tenantRepository,
+    Lazy<IViewRepository> viewRepository) : IUnitOfWork
 {
     private readonly RentContext _rentContext = rentContext;
 
@@ -36,6 +37,7 @@ public class UnitOfWork(
     private readonly Lazy<IRoomRepository> _roomRepository = roomRepository;
     private readonly Lazy<IRoomTypeRepository> _roomTypeRepository = roomTypeRepository;
     private readonly Lazy<ITenantRepository> _tenantRepository = tenantRepository;
+    private readonly Lazy<IViewRepository> _viewRepository = viewRepository;
 
     public IAccommodationRepository Accommodations => _accommodationRepository.Value;
     public IAccommodationRoomRepository AccommodationRooms => _accommodationRoomRepository.Value;
@@ -50,6 +52,8 @@ public class UnitOfWork(
     public IRoomRepository Rooms => _roomRepository.Value;
     public IRoomTypeRepository RoomTypes => _roomTypeRepository.Value;
     public ITenantRepository Tenants => _tenantRepository.Value;
+    public IViewRepository Views => _viewRepository.Value;
+
     public async Task SaveAsync() => await _rentContext.SaveChangesAsync();
     public void Dispose() => _rentContext.Dispose();
 }

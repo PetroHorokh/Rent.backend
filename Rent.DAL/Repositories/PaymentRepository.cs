@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Rent.DAL.DTO;
+using Rent.DAL.Models;
 using Rent.DAL.Repositories.Contracts;
 using Rent.DAL.RepositoryBase;
 
@@ -9,6 +10,6 @@ public class PaymentRepository(RentContext context) : RepositoryBase<Payment>(co
 {
     public async Task CreateWithProcedure(PaymentToCreateDto payment)
     {
-        await context.Database.ExecuteSqlAsync($"EXEC [dbo].[sp_Payment_Insert] @TenantId = '{payment.TenantId}', @BillId = '{payment.BillId}', @PaymentDay = '{payment.PaymentDay}', @Amount = '{payment.Amount}'");
+        await Context.Database.ExecuteSqlAsync($"EXEC [dbo].[sp_Payment_Insert] @TenantId = '{payment.TenantId}', @BillId = '{payment.BillId}', @PaymentDay = '{payment.PaymentDay}', @Amount = '{payment.Amount}', @CreatedBy = '{payment.CreatedBy}'");
     }
 }
