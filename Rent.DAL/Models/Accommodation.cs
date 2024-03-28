@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Rent.DAL;
+﻿namespace Rent.DAL.Models;
 
 public partial class Accommodation
 {
@@ -9,11 +6,11 @@ public partial class Accommodation
 
     public string Name { get; set; } = null!;
 
-    public string CreatedBy { get; set; } = null!;
+    public Guid CreatedBy { get; set; }
 
     public DateTime CreatedDateTime { get; set; }
 
-    public string ModifiedBy { get; set; } = null!;
+    public Guid ModifiedBy { get; set; }
 
     public DateTime ModifiedDateTime { get; set; }
 
