@@ -9,4 +9,6 @@ public class PriceToCreateDto
     public DateTime? EndDate { get; set; }
 
     public int RoomTypeId { get; set; }
+
+    public Guid CreatedBy { get; set; }
 }

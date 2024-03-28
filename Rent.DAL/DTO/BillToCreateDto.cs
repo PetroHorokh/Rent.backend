@@ -11,4 +11,6 @@ public class BillToCreateDto
     public DateTime IssueDate { get; set; }
 
     public DateTime? EndDate { get; set; }
+
+    public Guid CreatedBy { get; set; }
 }

@@ -9,4 +9,6 @@ public class PaymentToCreateDto
     public DateTime PaymentDay { get; set; }
 
     public decimal Amount { get; set; }
+
+    public Guid CreatedBy { get; set; }
 }
