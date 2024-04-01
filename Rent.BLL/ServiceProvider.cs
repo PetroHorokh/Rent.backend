@@ -104,6 +104,7 @@ public static class BllServiceProvider
         serviceProvider.AddSingleton<IUnitOfWork, UnitOfWork>();
 
         serviceProvider.AddSingleton<ITenantService, TenantService>();
+        serviceProvider.AddSingleton<IRoomService, RoomService>();
         serviceProvider.AddSingleton<IViewService, ViewService>();
 
         serviceProvider.AddAutoMapper(typeof(Rent.BLL.Profiles.MappingProfile));

@@ -6,5 +6,5 @@ namespace Rent.DAL.Repositories.Contracts;
 
 public interface IAccommodationRoomRepository : IRepositoryBase<AccommodationRoom>
 {
-    Task CreateWithProcedure(AccommodationRoomToCreateDto accommodationRoom);
+    Task<RepositoryResponseDto> CreateWithProcedure(AccommodationRoomToCreateDto accommodationRoom);
 }

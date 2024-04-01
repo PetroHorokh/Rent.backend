@@ -17,5 +17,6 @@ public class TenantToGetDto
 
     public string Description { get; set; } = null!;
 
-    public override string ToString() => $"Tenant {TenantId} information\nName: {Name}\nDirector: {Director}\nDescription: {Description}\nBank name: {BankName}\nAddress id: {AddressId}\n";
+    public override string ToString() =>
+        $"\nTenant {TenantId} information\nName: {Name}\nDirector: {Director}\nDescription: {Description}\nBank name: {BankName}\nAddress id: {AddressId}";
 }

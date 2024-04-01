@@ -18,7 +18,7 @@ internal class Program
             {
                 await MenuHandle.menuHandle[MenuHandle.MainMenuSelector]();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Console.WriteLine("Something went wrong! Try again");
                 MenuHandle.MainMenuSelector = MenuHandle.PrevSelector;

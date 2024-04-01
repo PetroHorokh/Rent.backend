@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Rent.BLL.Services;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.Models;
@@ -8,16 +9,20 @@ namespace Rent.console.Handles;
 public class ViewHandle
 {
     public delegate Task ViewHandleDelegate();
-    public static List<ViewHandleDelegate> viewHandle;
+    public static List<ViewHandleDelegate> ViewMenu { get; set; }
 
-    private static readonly IViewService viewService;
+    private static readonly IViewService ViewService;
 
     static ViewHandle()
     {
-        viewService = Program.Services.GetRequiredService<IViewService>();
-        viewHandle = new List<ViewHandleDelegate>() { CertificateForTenant, RoomsWithTenants, TenantAssetPayment,
-            async () => { MenuHandle.MainMenuSelector = 0; }
-        };
+        ViewService = Program.Services.GetRequiredService<IViewService>();
+        ViewMenu = 
+        [
+            CertificateForTenant, 
+            RoomsWithTenants, 
+            TenantAssetPayment,
+            () => Task.Run(() => MenuHandle.MainMenuSelector = 0),
+        ];
     }
 
     private static async Task CertificateForTenant()
@@ -27,9 +32,9 @@ public class ViewHandle
 
         if (Guid.TryParse(input, out Guid tenantId))
         {
-            var results = (await viewService.GetCertificateForTenant(tenantId)).ToList();
+            var results = (await ViewService.GetCertificateForTenant(tenantId)).ToList();
 
-            if (!results.Any()) Console.WriteLine($"There are no results for tenant {tenantId}");
+            if (results.IsNullOrEmpty()) Console.WriteLine($"There are no results for tenant {tenantId}");
             else
             {
                 string output = "";
@@ -53,9 +58,9 @@ public class ViewHandle
 
         if (DateTime.TryParse(input, out DateTime dateTime))
         {
-            var results = (await viewService.GetRoomsWithTenants(dateTime)).ToList();
+            var results = (await ViewService.GetRoomsWithTenants(dateTime)).ToList();
 
-            if (!results.Any()) Console.WriteLine("There are no results for provided date");
+            if (results.IsNullOrEmpty()) Console.WriteLine("There are no results for provided date");
             else
             {
                 foreach (var result in results)
@@ -75,11 +80,11 @@ public class ViewHandle
         Console.Write("\nPlease enter required tenant id: ");
         string input = Console.ReadLine()!;
 
-        if (Guid.TryParse(input, out Guid tenantId))
+        if (Guid.TryParse(input, out var tenantId))
         {
-            var results = (await viewService.GetTenantAssetPayment(tenantId)).ToList();
+            var results = (await ViewService.GetTenantAssetPayment(tenantId)).ToList();
 
-            if (!results.Any()) Console.WriteLine($"There are no results for tenant {tenantId}");
+            if (results.IsNullOrEmpty()) Console.WriteLine($"There are no results for tenant {tenantId}");
             else
             {
                 string output = "";

@@ -17,8 +17,11 @@ public class TenantService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Tenan
         var tenants = (await unitOfWork.Tenants.GetAllAsync()).ToList();
         logger.LogInformation("Finished calling TenantRepository, method GetAllAsync");
 
+        logger.LogInformation($"Mapping tenants to TenantToGetDto");
+        var result = tenants.Select(mapper.Map<TenantToGetDto>);
+
         logger.LogInformation("Exiting TenantService, GetAllTenantsAsync");
-        return tenants.Select(tenant => mapper.Map<TenantToGetDto>(tenant));
+        return result;
     }
 
     public async Task<TenantToGetDto?> GetTenantByIdAsync(Guid tenantId)

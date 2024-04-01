@@ -7,6 +7,4 @@ public class RoomToCreateDto
     public decimal Area { get; set; }
 
     public int RoomTypeId { get; set; }
-
-    public Guid CreatedBy { get; set; }
 }

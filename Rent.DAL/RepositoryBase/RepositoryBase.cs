@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Rent.DAL.RepositoryBase;
 
@@ -48,7 +49,14 @@ public class RepositoryBase<T>(RentContext context) : IRepositoryBase<T>
             .FirstOrDefaultAsync();
     }
 
-    //public void Create(T entity) => Context.Set<T>().Add(entity);
-    public void Update(T entity) => Context.Set<T>().Update(entity);
-    public void Delete(T entity) => Context.Set<T>().Remove(entity);
+    public EntityEntry<T> Update(T entity)
+    {
+        var result = Context.Set<T>().Update(entity);
+        return result;
+    }
+    public EntityEntry<T> Delete(T entity)
+    {
+        var result = Context.Set<T>().Remove(entity);
+        return result; 
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
 using Rent.DAL.Models;
@@ -6,13 +7,14 @@ using Rent.DAL.UnitOfWork;
 
 namespace Rent.BLL.Services;
 
-public class ViewService(IUnitOfWork unitOfWork, IMapper mapper) : IViewService
+public class ViewService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<ViewService> logger) : IViewService
 {
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly IMapper _mapper = mapper;
     public async Task<IEnumerable<VwCertificateForTenantToGetDto>> GetCertificateForTenant(Guid tenantId)
     {
-        var entities = (await _unitOfWork
+        logger.LogInformation("Entering ViewService, GetCertificateForTenant");
+
+        logger.LogInformation("Calling ViewRepository, method GetCertificateForTenant");
+        var entities = (await unitOfWork
             .Views
             .GetCertificateForTenant(tenantId))
             .GroupBy(entity => entity.RentId)
@@ -24,20 +26,33 @@ public class ViewService(IUnitOfWork unitOfWork, IMapper mapper) : IViewService
                 BillIds = string.Join(",\n", group.Select(obj => obj.BillId)),
                 PaymentIds = string.Join(",\n", group.Where(obj => obj.PaymentId != null).Select(obj => obj.PaymentId)),
             }); ;
+        logger.LogInformation("Finished calling ViewRepository, method GetCertificateForTenant");
+
+        logger.LogInformation("Exiting ViewService, GetCertificateForTenant");
         return entities;
     }
 
     public async Task<IEnumerable<VwRoomsWithTenantToGetDto>> GetRoomsWithTenants(DateTime dateTime)
     {
-        var entities = await _unitOfWork.Views.GetRoomsWithTenants(dateTime);
+        logger.LogInformation("Entering ViewService, GetRoomsWithTenants");
 
-        return entities.Select(entity => _mapper.Map<VwRoomsWithTenantToGetDto>(entity));
+        logger.LogInformation("Calling ViewRepository, method GetRoomsWithTenants");
+        var entities = await unitOfWork.Views.GetRoomsWithTenants(dateTime);
+        logger.LogInformation("Finished calling ViewRepository, method GetRoomsWithTenants");
+
+        logger.LogInformation("Exiting ViewService, GetRoomsWithTenants");
+        return entities.Select(mapper.Map<VwRoomsWithTenantToGetDto>);
     }
 
     public async Task<IEnumerable<VwTenantAssetPaymentToGetDto>> GetTenantAssetPayment(Guid tenantId)
     {
-        var entities = await _unitOfWork.Views.GetTenantAssetPayment(tenantId);
-         
-        return entities.Select(entity => _mapper.Map<VwTenantAssetPaymentToGetDto>(entity));
+        logger.LogInformation("Entering ViewService, GetTenantAssetPayment");
+
+        logger.LogInformation("Calling ViewRepository, method GetTenantAssetPayment");
+        var entities = await unitOfWork.Views.GetTenantAssetPayment(tenantId);
+        logger.LogInformation("Finished calling ViewRepository, method GetTenantAssetPayment");
+
+        logger.LogInformation("Exiting ViewService, GetTenantAssetPayment");
+        return entities.Select(mapper.Map<VwTenantAssetPaymentToGetDto>);
     }
 }

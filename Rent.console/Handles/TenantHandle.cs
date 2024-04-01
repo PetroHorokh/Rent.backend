@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Rent.BLL.Services;
 using Rent.BLL.Services.Contracts;
 using Rent.DAL.DTO;
@@ -11,23 +12,31 @@ namespace Rent.console.Handles;
 public static class TenantHandle
 {
     public delegate Task TenantHandleDelegate();
-    public static List<TenantHandleDelegate> tenantHandle;
+    public static List<TenantHandleDelegate> TenantMenu { get; set; }
 
-    private static readonly ITenantService tenantService;
+    private static readonly ITenantService TenantService;
 
     static TenantHandle()
     {
-        tenantService = Program.Services.GetRequiredService<ITenantService>();
-        tenantHandle = new List<TenantHandleDelegate>(){ GetAllTenants, GetTenantById, GetTenantByName, GetTenantAddressByTenantId, CreateTenant, UpdateTenant, DeleteTenant,
-            async () => { MenuHandle.MainMenuSelector = 0; }
-        };
+        TenantService = Program.Services.GetRequiredService<ITenantService>();
+        TenantMenu =
+        [ 
+            GetAllTenants, 
+            GetTenantById, 
+            GetTenantByName, 
+            GetTenantAddressByTenantId, 
+            CreateTenant, 
+            UpdateTenant, 
+            DeleteTenant,
+            () => Task.Run(() => MenuHandle.MainMenuSelector = 0),
+        ];
     }
 
     private static async Task GetAllTenants()
     {
-        var tenants = (await tenantService.GetAllTenantsAsync()).ToList();
+        var tenants = (await TenantService.GetAllTenantsAsync()).ToList();
 
-        if (!tenants.Any()) Console.WriteLine("There are no tenants");
+        if (tenants.IsNullOrEmpty()) Console.WriteLine("There are no tenants");
         else
         {
             foreach (var tenant in tenants)
@@ -44,7 +53,7 @@ public static class TenantHandle
 
         if (Guid.TryParse(input, out Guid tenantId))
         {
-            var tenant = await tenantService.GetTenantByIdAsync(tenantId);
+            var tenant = await TenantService.GetTenantByIdAsync(tenantId);
 
             Console.WriteLine( tenant != null ?
                 tenant:
@@ -61,7 +70,7 @@ public static class TenantHandle
         Console.WriteLine("\nPlease enter required tenant name: ");
         string tenantName = Console.ReadLine()!;
 
-        var tenant = await tenantService.GetTenantByNameAsync(tenantName);
+        var tenant = await TenantService.GetTenantByNameAsync(tenantName);
 
         Console.WriteLine(tenant != null ?
                 tenant:
@@ -75,7 +84,7 @@ public static class TenantHandle
 
         if (Guid.TryParse(input, out Guid tenantId))
         {
-            var address = await tenantService.GetTenantAddressByTenantIdAsync(tenantId);
+            var address = await TenantService.GetTenantAddressByTenantIdAsync(tenantId);
 
             Console.WriteLine(address != null ?
                 $"\n{input} tenant address information\n" + address :
@@ -133,7 +142,7 @@ public static class TenantHandle
             AddressId = addressId
         };
 
-        await tenantService.CreateTenant(tenant);
+        await TenantService.CreateTenant(tenant);
     }
 
     private static async Task DeleteTenant()
@@ -143,9 +152,9 @@ public static class TenantHandle
 
         if (Guid.TryParse(input, out Guid tenantId))
         {
-            var tenant = await tenantService.GetTenantByIdAsync(tenantId);
+            var tenant = await TenantService.GetTenantByIdAsync(tenantId);
 
-            if(tenant != null) await tenantService.DeleteTenant(tenantId);
+            if(tenant != null) await TenantService.DeleteTenant(tenantId);
         }
         else
         {
@@ -160,7 +169,7 @@ public static class TenantHandle
 
         if (Guid.TryParse(input, out Guid tenantId))
         {
-            var tenant = await tenantService.GetTenantByIdAsync(tenantId);
+            var tenant = await TenantService.GetTenantByIdAsync(tenantId);
 
             if (tenant != null)
             {
@@ -196,7 +205,7 @@ public static class TenantHandle
                     AddressId = tenantAddressId
                 };
 
-                await tenantService.UpdateTenant(tenantToUpdate);
+                await TenantService.UpdateTenant(tenantToUpdate);
             }
             else
             {
@@ -209,11 +218,12 @@ public static class TenantHandle
         }
     }
 
-    private static bool EditDecision(string input) => input.ToLower() == "y" || input.ToLower() == "n" ||
-                                                      input.ToLower() == "yes" || input.ToLower() == "no";
+    private static bool EditDecision(string input) =>
+        string.CompareOrdinal(input.ToLower(), "y") == 0 || string.CompareOrdinal(input.ToLower(), "n") == 0 ||
+        string.CompareOrdinal(input.ToLower(), "yes") == 0 || string.CompareOrdinal(input.ToLower(), "no") == 0;
 
-    private static bool EditConfirm(string input) => input.ToLower() == "y" || input.ToLower() == "yes";
-
+    private static bool EditConfirm(string input) => string.CompareOrdinal(input.ToLower(), "y") == 0 ||
+                                                     string.CompareOrdinal(input.ToLower(), "yes") == 0;
     private static void EditProp(ref string prop, string propName)
     {
         string input;
@@ -227,7 +237,6 @@ public static class TenantHandle
 
         if (EditConfirm(input))
         {
-            input = String.Empty;
             Console.Write($"New tenant {propName}: ");
             input = Console.ReadLine()!;
             prop = input;
@@ -250,7 +259,6 @@ public static class TenantHandle
             Guid newProp;
             do
             {
-                input = String.Empty;
                 Console.Write($"New tenant {propName}: ");
                 input = Console.ReadLine()!;
             } while (!Guid.TryParse(input, out newProp));

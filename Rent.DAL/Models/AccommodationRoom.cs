@@ -8,6 +8,8 @@ public partial class AccommodationRoom
 
     public Guid RoomId { get; set; }
 
+    public int Quantity { get; set; }
+
     public Guid CreatedBy { get; set; }
 
     public DateTime CreatedDateTime { get; set; }

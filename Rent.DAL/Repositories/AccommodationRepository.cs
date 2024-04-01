@@ -10,6 +10,6 @@ public class AccommodationRepository(RentContext context) : RepositoryBase<Accom
 {
     public async Task CreateWithProcedure(AccommodationToCreateDto accommodation)
     {
-        await Context.Database.ExecuteSqlAsync($"EXEC [dbo].[sp_Accommodation_Insert] @Name = '{accommodation.Name}', @CreatedBy = '{accommodation.CreatedBy}'");
+        await Context.Database.ExecuteSqlAsync($"EXEC [dbo].[sp_Accommodation_Insert] @Name = '{accommodation.Name}'");
     }
 }

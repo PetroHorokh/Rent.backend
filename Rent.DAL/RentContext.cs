@@ -71,6 +71,7 @@ public partial class RentContext : DbContext
             entity.ToTable("AccommodationRoom");
 
             entity.Property(e => e.AccommodationRoomId).ValueGeneratedNever();
+            entity.Property(e => e.Quantity);
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
                 .HasDefaultValueSql("(user_name())");

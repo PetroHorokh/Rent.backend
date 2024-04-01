@@ -10,6 +10,6 @@ public class ImpostRepository(RentContext context) : RepositoryBase<Impost>(cont
 {
     public async Task CreateWithProcedure(ImpostToCreateDto impost)
     {
-        await context.Database.ExecuteSqlAsync($"EXEC [dbo].[sp_Impost_Insert] @Tax = {impost.Tax}, @Fine = {impost.Tax}, @PaymentDay = {impost.PaymentDay}, @StartDay = '{impost.StartDate}', @EndDay = '{impost.EndDate}', @CreatedBy = '{impost.CreatedBy}'");
+        await Context.Database.ExecuteSqlAsync($"EXEC [dbo].[sp_Impost_Insert] @Tax = {impost.Tax}, @Fine = {impost.Tax}, @PaymentDay = {impost.PaymentDay}, @StartDay = '{impost.StartDate}', @EndDay = '{impost.EndDate}', @CreatedBy = '{impost.CreatedBy}'");
     }
 }

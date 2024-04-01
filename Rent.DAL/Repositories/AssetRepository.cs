@@ -10,6 +10,6 @@ public class AssetRepository(RentContext context) : RepositoryBase<Asset>(contex
 {
     public async Task CreateWithProcedure(AssetToCreateDto asset)
     {
-        await context.Database.ExecuteSqlAsync($"EXEC [dbo].[sp_Asset_Insert] @OwnerId = '{asset.OwnerId}', @RoomId = '{asset.RoomId}', @CreatedBy = '{asset.CreatedBy}'");
+        await Context.Database.ExecuteSqlAsync($"EXEC [dbo].[sp_Asset_Insert] @OwnerId = '{asset.OwnerId}', @RoomId = '{asset.RoomId}', @CreatedBy = '{asset.CreatedBy}'");
     }
 }

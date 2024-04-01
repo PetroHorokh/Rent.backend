@@ -6,5 +6,5 @@ public class AccommodationRoomToCreateDto
 
     public Guid RoomId { get; set; }
 
-    public Guid CreatedBy { get; set; }
+    public int Quantity { get; set; }
 }
